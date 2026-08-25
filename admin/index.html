@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lead Dashboard — LandsandHousing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #F7F4EE;
+      --text: #171716;
+      --muted: #625F58;
+      --gold: #B18A4A;
+      --border: #DED7CA;
+      --white: #FFFFFF;
+      --subtle: #EEE8DD;
+      --green: #65715D;
+      --red: #C0392B;
+      --orange: #E67E22;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 32px 20px; }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header h1 {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .header .tagline {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+
+    .stat-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 20px;
+    }
+
+    .stat-card .label {
+      font-size: 10px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .stat-card .value {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 28px;
+      font-weight: 600;
+    }
+
+    .filters {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 9999px;
+      padding: 8px 16px;
+      font-size: 12px;
+      font-family: 'Inter', sans-serif;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .filter-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .filter-btn.active { background: var(--gold); color: var(--white); border-color: var(--gold); }
+
+    .table-wrap {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      text-align: left;
+      padding: 14px 16px;
+      font-size: 10px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 600;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+    }
+
+    td {
+      padding: 14px 16px;
+      font-size: 13px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: var(--bg); }
+
+    .status {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .status-new { background: #FFF3CD; color: #856404; }
+    .status-booked { background: #D4EDDA; color: #155724; }
+    .status-confirmed { background: #CCE5FF; color: #004085; }
+    .status-attended { background: #D4EDDA; color: #155724; }
+    .status-no_show { background: #F8D7DA; color: #721C24; }
+    .status-lost { background: #E2E3E5; color: #383D41; }
+
+    .empty {
+      text-align: center;
+      padding: 48px 20px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .loading { text-align: center; padding: 48px; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div>
+        <h1>Lead Dashboard</h1>
+        <p class="tagline">LandsandHousing · Lead Follow-Up System</p>
+      </div>
+      <div style="font-size:12px; color:var(--muted);" id="last-updated"></div>
+    </div>
+
+    <div class="stats" id="stats">
+      <div class="stat-card"><div class="label">Total Leads</div><div class="value" id="stat-total">-</div></div>
+      <div class="stat-card"><div class="label">New</div><div class="value" id="stat-new">-</div></div>
+      <div class="stat-card"><div class="label">Booked</div><div class="value" id="stat-booked">-</div></div>
+      <div class="stat-card"><div class="label">Attended</div><div class="value" id="stat-attended">-</div></div>
+      <div class="stat-card"><div class="label">No-Shows</div><div class="value" id="stat-noshow">-</div></div>
+    </div>
+
+    <div class="filters" id="filters">
+      <button class="filter-btn active" data-status="all">All</button>
+      <button class="filter-btn" data-status="new">New</button>
+      <button class="filter-btn" data-status="booked">Booked</button>
+      <button class="filter-btn" data-status="confirmed">Confirmed</button>
+      <button class="filter-btn" data-status="attended">Attended</button>
+      <button class="filter-btn" data-status="no_show">No-Shows</button>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Topic</th>
+            <th>Status</th>
+            <th>Source</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody id="leads-body">
+          <tr><td colspan="7" class="loading">Loading leads...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = '';
+    let currentFilter = 'all';
+
+    async function loadLeads(status = 'all') {
+      const tbody = document.getElementById('leads-body');
+      tbody.innerHTML = '<tr><td colspan="7" class="loading">Loading leads...</td></tr>';
+
+      try {
+        const res = await fetch(`${API_BASE}/api/admin/leads?status=${status}&limit=50`);
+        const data = await res.json();
+
+        if (!data.leads || data.leads.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="7" class="empty">No leads found</td></tr>';
+          updateStats(data);
+          return;
+        }
+
+        tbody.innerHTML = data.leads.map(lead => `
+          <tr>
+            <td><strong>${escapeHtml(lead.name)}</strong></td>
+            <td>${escapeHtml(lead.phone)}</td>
+            <td>${escapeHtml(lead.email || '—')}</td>
+            <td style="font-size:12px;">${escapeHtml(lead.topic || '—')}</td>
+            <td><span class="status status-${lead.status}">${formatStatus(lead.status)}</span></td>
+            <td style="font-size:12px;">${escapeHtml(lead.source || '—')}</td>
+            <td style="font-size:12px; color:var(--muted);">${formatDate(lead.created_at)}</td>
+          </tr>
+        `).join('');
+
+        updateStats(data);
+        document.getElementById('last-updated').textContent = `Updated: ${new Date().toLocaleTimeString()}`;
+      } catch (err) {
+        tbody.innerHTML = '<tr><td colspan="7" class="empty">Error loading leads. Check API configuration.</td></tr>';
+      }
+    }
+
+    function updateStats(data) {
+      const leads = data.leads || [];
+      document.getElementById('stat-total').textContent = data.total || leads.length;
+      document.getElementById('stat-new').textContent = leads.filter(l => l.status === 'new').length;
+      document.getElementById('stat-booked').textContent = leads.filter(l => l.status === 'booked').length;
+      document.getElementById('stat-attended').textContent = leads.filter(l => l.status === 'attended').length;
+      document.getElementById('stat-noshow').textContent = leads.filter(l => l.status === 'no_show').length;
+    }
+
+    function formatStatus(s) {
+      const map = { new: 'New', booked: 'Booked', confirmed: 'Confirmed', attended: 'Attended', no_show: 'No-Show', lost: 'Lost' };
+      return map[s] || s;
+    }
+
+    function formatDate(d) {
+      return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    document.getElementById('filters').addEventListener('click', (e) => {
+      if (!e.target.classList.contains('filter-btn')) return;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      e.target.classList.add('active');
+      currentFilter = e.target.dataset.status;
+      loadLeads(currentFilter);
+    });
+
+    loadLeads();
+  </script>
+</body>
+</html>

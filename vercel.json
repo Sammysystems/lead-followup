@@ -1,0 +1,15 @@
+{
+  "buildCommand": "node -e \"require('fs').mkdirSync('dist',{recursive:true}); require('fs').cpSync('index.html','dist/index.html'); require('fs').cpSync('book','dist/book',{recursive:true}); require('fs').cpSync('admin','dist/admin',{recursive:true});\"",
+  "outputDirectory": "dist",
+  "installCommand": "npm install",
+  "functions": {
+    "api/**/*.ts": {
+      "maxDuration": 30
+    }
+  },
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/$1" },
+    { "source": "/book", "destination": "/book/index.html" },
+    { "source": "/admin", "destination": "/admin/index.html" }
+  ]
+}

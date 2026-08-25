@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book a Consultation — LandsandHousing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #F7F4EE;
+      --text: #171716;
+      --muted: #625F58;
+      --gold: #B18A4A;
+      --border: #DED7CA;
+      --white: #FFFFFF;
+      --subtle: #EEE8DD;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 560px;
+      margin: 0 auto;
+      padding: 40px 20px 60px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .header h1 {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .header .tagline {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px 28px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .badge svg { width: 14px; height: 14px; }
+
+    .card h2 {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 26px;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.2;
+      margin-bottom: 6px;
+    }
+
+    .card .subtitle {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: var(--gold);
+    }
+
+    .form-group input::placeholder {
+      color: #aaa;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .submit-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #B18A4A 0%, #9A7540 100%);
+      color: var(--white);
+      border: none;
+      border-radius: 9999px;
+      padding: 14px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      margin-top: 8px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .submit-btn:hover { opacity: 0.9; }
+    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .success {
+      text-align: center;
+      padding: 40px 20px;
+      display: none;
+    }
+
+    .success-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--subtle);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      color: #65715D;
+    }
+
+    .success h3 {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .success p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 32px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .footer a { color: var(--gold); text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>LandsandHousing</h1>
+      <p class="tagline">Property Advisory & Real Estate</p>
+    </div>
+
+    <div class="card" id="booking-form">
+      <div class="badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>FREE PROPERTY CONSULTATION</span>
+      </div>
+
+      <h2>Book a Consultation</h2>
+      <p class="subtitle">Speak with a senior property advisor about acquisitions, sales, management, or valuation in Uyo.</p>
+
+      <form id="form">
+        <div class="row">
+          <div class="form-group">
+            <label>Your Name *</label>
+            <input type="text" id="name" required placeholder="e.g. Mr. Obong Emmanuel" />
+          </div>
+          <div class="form-group">
+            <label>Phone / WhatsApp *</label>
+            <input type="tel" id="phone" required placeholder="0805 632 1856" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="email" placeholder="you@example.com" />
+        </div>
+
+        <div class="form-group">
+          <label>Preferred Date *</label>
+          <input type="date" id="date" required />
+        </div>
+
+        <div class="form-group">
+          <label>Preferred Time *</label>
+          <select id="time" required>
+            <option value="">Select a time slot</option>
+            <option value="09:00">9:00 AM</option>
+            <option value="09:30">9:30 AM</option>
+            <option value="10:00">10:00 AM</option>
+            <option value="10:30">10:30 AM</option>
+            <option value="11:00">11:00 AM</option>
+            <option value="11:30">11:30 AM</option>
+            <option value="12:00">12:00 PM</option>
+            <option value="13:00">1:00 PM</option>
+            <option value="13:30">1:30 PM</option>
+            <option value="14:00">2:00 PM</option>
+            <option value="14:30">2:30 PM</option>
+            <option value="15:00">3:00 PM</option>
+            <option value="15:30">3:30 PM</option>
+            <option value="16:00">4:00 PM</option>
+            <option value="16:30">4:30 PM</option>
+            <option value="17:00">5:00 PM</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>What are you looking for?</label>
+          <select id="topic">
+            <option value="Property Acquisition / Buying in Uyo">Property Acquisition / Buying in Uyo</option>
+            <option value="Property Sales / Listing a Property">Property Sales / Listing a Property</option>
+            <option value="Property Management Services">Property Management & Tenancy Oversight</option>
+            <option value="Property Costing & Valuation">Property Costing & Valuation Feasibility</option>
+            <option value="Commercial Leasing">Commercial Leasing on Aka/Abak Corridor</option>
+          </select>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submit-btn">Book My Consultation</button>
+      </form>
+    </div>
+
+    <div class="success" id="success-state">
+      <div class="success-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <h3>Consultation Booked</h3>
+      <p id="success-message">Thank you. A senior LandsandHousing property advisor will contact you shortly to confirm your appointment.</p>
+      <p style="margin-top:16px; font-size:12px; color:#625F58;">181 Aka Road, Uyo · 0805 632 1856</p>
+    </div>
+
+    <div class="footer">
+      <p>181 Aka Road, Uyo 520001, Akwa Ibom, Nigeria</p>
+      <p style="margin-top:4px;">0805 632 1856 · <a href="https://wa.me/2348056321856">WhatsApp</a></p>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('form');
+    const submitBtn = document.getElementById('submit-btn');
+    const bookingForm = document.getElementById('booking-form');
+    const successState = document.getElementById('success-state');
+    const successMessage = document.getElementById('success-message');
+
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('date').setAttribute('min', today);
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'BOOKING...';
+
+      const data = {
+        name: document.getElementById('name').value,
+        phone: document.getElementById('phone').value,
+        email: document.getElementById('email').value || null,
+        date: document.getElementById('date').value,
+        time: document.getElementById('time').value,
+        topic: document.getElementById('topic').value,
+      };
+
+      try {
+        const res = await fetch('/api/webhook/booking', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+
+        if (res.ok) {
+          const dateFormatted = new Date(data.date + 'T00:00:00').toLocaleDateString('en-US', {
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+          });
+          const timeFormatted = document.getElementById('time').options[document.getElementById('time').selectedIndex].text;
+
+          successMessage.textContent = `Your consultation is booked for ${dateFormatted} at ${timeFormatted}. A confirmation will be sent to your email. A senior LandsandHousing property advisor will contact you shortly.`;
+          bookingForm.style.display = 'none';
+          successState.style.display = 'block';
+        } else {
+          alert('Something went wrong. Please try again or call us at 0805 632 1856.');
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'BOOK MY CONSULTATION';
+        }
+      } catch (err) {
+        alert('Network error. Please check your connection and try again.');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'BOOK MY CONSULTATION';
+      }
+    });
+  </script>
+</body>
+</html>
